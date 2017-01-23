@@ -1,0 +1,18 @@
+<ul class="list-unstyled past-issues">
+    <li class="nav-header disabled"><h2>Past issues</h2></li>
+    $for(posts)$
+    <li>
+	<div class="row post-title">
+	    <div class="col-xs-12 col-sm-4">
+		<span class="small text-muted time-prefix">
+		    <!-- fix datetime field -->
+		    <time pubdate="pubdate" datetime="2017-01-17T00:00:00-05:00">$date$</time>
+		</span>
+	    </div>
+	    <div class="col-xs-12 col-sm-8 text-right custom-xs-text-left">
+		<a href="$url$">This Week in Eta</a>
+	    </div>
+	</div>      
+    </li>
+    $endfor$
+</ul>
