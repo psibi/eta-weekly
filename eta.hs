@@ -19,6 +19,7 @@ main =
        do route $ setExtension "html"
           compile $
             pandocCompiler >>= loadAndApplyTemplate "templates/post.html" postCtx >>=
+            saveSnapshot "content" >>=
             relativizeUrls
      create ["archive.html"] $
        do route idRoute
@@ -42,7 +43,33 @@ main =
                      postCtx
                makeItem "" >>= loadAndApplyTemplate "templates/default.html" archiveCtx >>=
                  relativizeUrls
+     create ["atom.xml"] $
+       do route idRoute
+          compile $
+            do let feedCtx = postCtx `mappend` bodyField "description"
+               posts <-
+                 fmap (take 10) . recentFirst =<<
+                 loadAllSnapshots "posts/*" "content"
+               renderAtom etaFeedConfiguration feedCtx posts
+     create ["rss.xml"] $
+       do route idRoute
+          compile $
+            do let feedCtx = postCtx `mappend` bodyField "description"
+               posts <-
+                 fmap (take 10) . recentFirst =<<
+                 loadAllSnapshots "posts/*" "content"
+               renderRss etaFeedConfiguration feedCtx posts
      match "templates/*" $ compile templateCompiler
+
+etaFeedConfiguration :: FeedConfiguration
+etaFeedConfiguration =
+  FeedConfiguration
+  { feedTitle = "This Week in Eta"
+  , feedDescription = "Provides weekly update from Eta community"
+  , feedAuthorName = "Sibi"
+  , feedAuthorEmail = "psibi2000+eta-weekly@gmail.com"
+  , feedRoot = "http://127.0.0.1"
+  }
 
 postCtx :: Context String
 postCtx =
