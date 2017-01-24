@@ -1,10 +1,8 @@
---------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
 
-import Data.Monoid (mappend, (<>))
+import Data.Monoid ((<>))
 import Hakyll
 
---------------------------------------------------------------------------------
 main :: IO ()
 main =
   hakyll $
@@ -46,7 +44,6 @@ main =
                  relativizeUrls
      match "templates/*" $ compile templateCompiler
 
---------------------------------------------------------------------------------
 postCtx :: Context String
 postCtx =
   dateField "date" "%B %e, %Y" <> dateField "pubDate" "%FT00:00:00-05:00" <> defaultContext
