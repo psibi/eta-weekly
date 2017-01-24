@@ -15,5 +15,5 @@ That will run a preview server at `http://localhost.com:8000
 Credits
 ---------
 
-Thanks to [Corey Anderson's][https://github.com/cmr/this-week-in-rust]
+Thanks to [Corey Anderson's](https://github.com/cmr/this-week-in-rust)
 code from which this has been ported to Hakyll.
