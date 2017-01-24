@@ -38,11 +38,11 @@ main =
             do posts <- recentFirst =<< loadAll "posts/*"
                let sixPosts = take 5 posts
                let archiveCtx =
-                     listField "posts" postCtx (return sixPosts) `mappend`
-                     constField "title" "Home" `mappend`
+                     listField "posts" postCtx (return sixPosts) <>
+                     boolField "index" (\_ -> True) <>
+                     constField "title" "Home" <>
                      postCtx
-               makeItem "" >>= loadAndApplyTemplate "templates/archive.html" archiveCtx >>=
-                 loadAndApplyTemplate "templates/default.html" archiveCtx >>=
+               makeItem "" >>= loadAndApplyTemplate "templates/default.html" archiveCtx >>=
                  relativizeUrls
      match "templates/*" $ compile templateCompiler
 
