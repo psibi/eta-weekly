@@ -17,11 +17,6 @@ main =
      match "css/*" $
        do route idRoute
           compile compressCssCompiler
-     match (fromList ["about.md", "contact.markdown"]) $
-       do route $ setExtension "html"
-          compile $
-            pandocCompiler >>= loadAndApplyTemplate "templates/default.html" defaultContext >>=
-            relativizeUrls
      match "posts/*" $
        do route $ setExtension "html"
           compile $
@@ -32,11 +27,10 @@ main =
           compile $
             do posts <- recentFirst =<< loadAll "posts/*"
                let archiveCtx =
-                     listField "posts" postCtx (return posts) `mappend`
-                     constField "title" "Archives" `mappend`
+                     listField "posts" postCtx (return posts) <>
+                     constField "title" "Archives" <>
                      defaultContext
-               makeItem "" >>=
-                 loadAndApplyTemplate "templates/archive_base.html" archiveCtx >>=
+               makeItem "" >>= loadAndApplyTemplate "templates/archive.html" archiveCtx >>=
                  relativizeUrls
      create ["index.html"] $
        do route idRoute
@@ -54,4 +48,5 @@ main =
 
 --------------------------------------------------------------------------------
 postCtx :: Context String
-postCtx = dateField "date" "%B %e, %Y" `mappend` defaultContext
+postCtx =
+  dateField "date" "%B %e, %Y" <> dateField "pubDate" "%FT00:00:00-05:00" <> defaultContext
