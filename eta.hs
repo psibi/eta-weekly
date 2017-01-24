@@ -1,7 +1,10 @@
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 import Data.Monoid ((<>))
 import Hakyll
+import Hakyll.Core.Metadata
+import Data.Maybe (fromMaybe)
 
 main :: IO ()
 main =
@@ -71,6 +74,17 @@ etaFeedConfiguration =
   , feedRoot = "http://127.0.0.1"
   }
 
+issueNoContext :: Context String
+issueNoContext =
+  field "issueNo" $
+  \item -> do
+    metadata <- getMetadata (itemIdentifier item)
+    return $ processIssue $ lookupString ("issueNo" :: String) metadata
+  where
+    processIssue Nothing = "<insert-issue-no>"
+    processIssue (Just xs) = take (length xs - 2) xs
+
 postCtx :: Context String
 postCtx =
-  dateField "date" "%B %e, %Y" <> dateField "pubDate" "%FT00:00:00-05:00" <> defaultContext
+  dateField "date" "%B %e, %Y" <> dateField "pubDate" "%FT00:00:00-05:00" <> issueNoContext <>
+  defaultContext
